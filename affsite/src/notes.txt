@@ -1,0 +1,17 @@
+RegEx
+
+
+(.) - any character (.*)
+(*) - 0 or more times => "a dog"
+(+) - 0 or 1 time (.+)
+(^) - beginning of the string or (negation [^0-7])
+($) - end of the string 
+([0-7]) - limit
+([A-Za-z]) - limit of alphabet
+.{15} - any characters within the limit
+.{15,} - any characters more than the limit 
+.{15,22} - any characters between the limit. 
+(?=.*[a-z])  (?=.*[A-Z]) (?=.*[0-9]) (?=.*[!@#$%^&*])
+AA%^%^&%xsdsdg4&
+
+Bug : 1. nav content disappearing after resizing.
