@@ -22,11 +22,11 @@ export function Profile() {
                                 <div className="records">
                                     <i className="fa fa-shopping-cart" aria-hidden="true"></i>
                                     <h3>Buy records</h3>
-                                    <div className="number-of-prod"> 10 </div>
+                                    <div className="number-of-prod"> {context.buyrecords.length} </div>
                                 </div>
                             </IconButton>
                         </div>
-            
+
                         <div className="holder-2">
                             <Link to="/wishlist">
                                 <IconButton>
@@ -37,13 +37,15 @@ export function Profile() {
                                     </div>
                                 </IconButton>
                             </Link>
-            
-                           <IconButton>
-                            <div className="signout">
+
+                           <Link to="/login" onClick={() => {context.setLoginStatus(false); localStorage.setItem("userDetails","")}}>
+                            <IconButton>
+                                <div className="signout">
                                     <i className="fa fa-power-off" aria-hidden="true"></i>
                                     <h3>Signout</h3>
                                 </div>
-                           </IconButton>
+                            </IconButton>
+                           </Link>
                         </div>
                     </div>
             

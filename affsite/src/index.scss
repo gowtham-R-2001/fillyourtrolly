@@ -91,12 +91,12 @@ code {
   width: fit-content;
   padding: 5px 20px 0px 20px;
   text-align: center;
-  background: rgba(#0077FF,0.7);
+  background: rgba(#0077FF,1);
   border-radius: 7px;
   color: #FFF;
   right: 0; left: 0;
   margin: auto;
-  transition: 1s ease-out;
+  transition: .5s ease-out;
   transform: translateY(-100px);
   z-index: 2000;
 }

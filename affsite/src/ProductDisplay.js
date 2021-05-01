@@ -25,7 +25,12 @@ export function ProductDisplay() {
     setTimeout(() => {
       Axios.get(url)
         .then((response) => {
-          if(response.status === 200)
+          if(response.data.data)
+          {
+            if(response.data.data.code === "ECONNREFUSED")
+              setError(true);
+          }
+          else if(response.status === 200)
             sort(filter, response.data, (sortedData)=> setProducts(sortedData));
           else
             setError(true);

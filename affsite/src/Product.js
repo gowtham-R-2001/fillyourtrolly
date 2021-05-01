@@ -1,6 +1,19 @@
 import Button from "@material-ui/core/Button";
+import Axios from "axios";
 import { ImageLoader } from "./helpers/ImageLoader"
+import { popper } from "./helpers/popper";
 import { WishlistContext } from "./WishlistContext";
+
+function isAlreadyPresent(wishes, prod) {
+    let result = false;
+    for(let i = 0; i < wishes.length; i++)
+        if(JSON.stringify(wishes[i]) === JSON.stringify(prod)) {
+            result = !result;
+            break;
+        }
+
+    return result;
+}
 
 export function Product(props) {
     let imageArr = ["one_star.png","two_star.png","three_star.png","four_star.png","five_star.png"];
@@ -57,7 +70,16 @@ export function Product(props) {
 
                                     <Button
                                         id="add-to-wishist-btn"
-                                        onClick={(e) => {context.wish.push(props); e.target.innerHTML="Added&nbsp;<i class='fa fa-heart'> </i>"}}
+                                        onClick={(e) => {
+                                            if(context.loginStatus === true)
+                                            {
+                                                let result = isAlreadyPresent(context.wish, props);
+                                                if(result === false) context.wish.push(props);
+                                                e.target.innerHTML = "Added&nbsp;<i class='fa fa-heart'> </i>";
+                                            }
+                                            else
+                                                popper("Please login to add in wishlist");
+                                        }}
                                         variant="contained"
                                         size="medium"
                                         color="primary"
@@ -76,7 +98,6 @@ export function Product(props) {
                                         variant="contained"
                                         size="medium"
                                         color="primary"
-                                        onClick={() => window.open("https://amazon.in/"+props.link)}
                                     >
                                         {props.button1}
                                     </Button>
@@ -92,7 +113,6 @@ export function Product(props) {
                                     </Button>
                                 </div>
                             }
-                            
                         </div>
                     </div>);
                 }

@@ -6,6 +6,8 @@ import Axios from "axios";
 import { isValidEmail } from "./helpers/validation";
 import { popper } from "./helpers/popper";
 import { useEffect } from "react";
+import { Wishlist } from "./Wishlist";
+import { WishlistContext } from "./WishlistContext";
 
 export function Login() {
   const loginkey = "login-key";
@@ -14,7 +16,7 @@ export function Login() {
     password: "",
   });
 
-  const handleLogin = () => {
+  const handleLogin = (setLoginStatus) => {
     const emailInput = document.getElementById('email-input').value;
     const passwordInput = document.getElementById('password-input').value;
     const loginBtn = document.getElementById('login-btn');
@@ -28,7 +30,7 @@ export function Login() {
           if (res.data.status === 200 && res.data.data[0]['COUNT(*)'] > 0) {
             popper("Login success :) Please wait..");
             localStorage.setItem("userDetails",JSON.stringify({email: emailInput}));
-            <Redirect push to="/profile" />
+            setTimeout(() => setLoginStatus(true), 1500);
           }
           else
             popper("No user exists :(");
@@ -40,7 +42,6 @@ export function Login() {
   }
 
   return (
-
     <div className="login">
       <div className="login-panel">
         <TextField
@@ -67,18 +68,28 @@ export function Login() {
           label="Password"
           variant="outlined"
         />
-        <Button
-          id="login-btn"
-          variant="contained"
-          size="medium"
-          color="primary"
-          onClick={() => { handleLogin() }}
-        >
-          Login
-        </Button>
-        <span className="link-holder">
-          Don't have an account ? <Link to="/register">Register</Link>
-        </span>
+        <WishlistContext.Consumer>
+          {
+            (context) => {
+              return(
+                <>
+                  <Button
+                    id="login-btn"
+                    variant="contained"
+                    size="medium"
+                    color="primary"
+                    onClick={() => { handleLogin(context.setLoginStatus) }}
+                  >
+                    Login
+                  </Button>
+                  <span className="link-holder">
+                    Don't have an account ? <Link to="/register">Register</Link>
+                  </span>
+                </>
+              );
+            }
+          }
+        </WishlistContext.Consumer>
       </div>
     </div>
   );

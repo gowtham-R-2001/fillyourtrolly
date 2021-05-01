@@ -53,6 +53,7 @@ export function CommonProduct(props) {
                           link={product.link}
                           button1={"Buy"}
                           button2={"Add to wishlist"}
+                          contType="product-comp"
                         />
                     );
                 })    

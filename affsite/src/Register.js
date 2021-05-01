@@ -5,12 +5,13 @@ import Button from '@material-ui/core/Button';
 import Axios from "axios";
 import { isValidEmail } from "./helpers/validation";
 import { popper } from "./helpers/popper";
+import { WishlistContext } from "./WishlistContext";
 
 export function Register() {
     const registerKey = 'reg-key';
     const [values, handleValues] = useLogin(registerKey, { email: '', password: '', conpassword: '' });
 
-    const handleRegister = () => {
+    const handleRegister = (setLoginStatus) => {
         const emailInput = document.getElementById('email-input').value;
         const passwordInput = document.getElementById('password-input').value;
         const conPasswordInput = document.getElementById('conpassword-input').value;
@@ -30,9 +31,7 @@ export function Register() {
                     if(res.data.status === 200) {
                         popper("Sign up success :) Please wait..");
                         localStorage.setItem("userDetails",JSON.stringify({email: emailInput}));
-                        setTimeout(() => {
-                            <Redirect push to="/profile" />
-                        }, 1500);
+                        setTimeout(() => setLoginStatus(true), 1500);
                     }
                     else {
                         popper("User already exists :(");
@@ -50,9 +49,17 @@ export function Register() {
                 <TextField type="email" fullWidth value={values.email} onChange={(e) => { handleValues(e) }} name="email" id="email-input" label="Email id" variant="outlined" />
                 <TextField type="password" fullWidth value={values.password} onChange={(e) => { handleValues(e) }} name="password" id="password-input" label="Password" variant="outlined" />
                 <TextField type="password" fullWidth value={values.conpassword} onChange={(e) => { handleValues(e) }} name="conpassword" id="conpassword-input" label="Confirm Password" variant="outlined" />
-                <Button onClick={() => { handleRegister() }} id="reg-btn" variant="contained" size="medium" color="primary">
-                    Register
-                </Button>
+                <WishlistContext.Consumer>
+                    {
+                        (context) => {
+                            return(
+                                <Button onClick={() => { handleRegister(context.setLoginStatus) }} id="reg-btn" variant="contained" size="medium" color="primary">
+                                    Register
+                                </Button>
+                            );
+                        }
+                    }
+                </WishlistContext.Consumer>
                 <span>
                     Already have an account ? <Link to="/login">Login</Link>
                 </span>
