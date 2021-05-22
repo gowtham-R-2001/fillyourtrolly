@@ -13,7 +13,7 @@ function isUser(email, password) {
   let promise = new Promise((resolve, reject) => {
     db.query(sql, (err, res) => {
       if (err) reject(err);
-      else resolve(res);
+      else resolve(res); 
     });
   });
 

@@ -5,7 +5,6 @@ const stringSimilarity = require('string-similarity');
 
 router.get("/:item",(req,res) => {
     let item = req.params.item;
-    console.log(item);
     isPresent(item)
         .then(response => {
             if (response.rating > 0) {

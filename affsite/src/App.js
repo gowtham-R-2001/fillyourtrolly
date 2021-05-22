@@ -13,18 +13,27 @@ import { Search } from "./Search";
 import { CommonProduct } from "./CommonProduct";
 import { ProductDisplay } from "./ProductDisplay";
 import { Admin } from "./Admin";
-import Axios from "axios";
 import { useEffect, useState } from "react";
 import { Loader } from "./helpers/Loader";
 import { WishlistContext } from "./WishlistContext";
 import { checkIsUser, getWishlist, getBuyRecords } from "./Infohelpers";
 
+let count = 0;
+
 function App() {
   const location = useLocation();
   const [isUser, setIsUser] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
+  const [username, setUsername] = useState("");
+  const [userWishlist, setUserWishList] = useState([]);
+  const [userBuyRecords, setUserBuyRecords] = useState([]);
+  let user = null;
 
   useEffect(() => {
+    count++;
+  })
+
+  if(isLoaded)
     window.addEventListener("resize", () => {
       if (window.innerWidth < 400)
         document.querySelector(".titlebar h2").textContent = "FYT";
@@ -32,35 +41,47 @@ function App() {
         document.querySelector(".titlebar h2").textContent = "Fill Your Trolly";
     });
 
-      let user = null;
+  useEffect(() => {
+    try {
+        user = localStorage.getItem("userDetails")
+      ? JSON.parse(localStorage.getItem("userDetails"))
+      : null;
+    }
+    catch(err) {
+      user = null;
+      setIsUser(false);
+      setIsLoaded(true);
+      return;
+    }
 
-      try {
-          user = localStorage.getItem("userDetails")
-        ? JSON.parse(localStorage.getItem("userDetails"))
-        : null;
-      }
-      catch(err) {
-        user = null;
-        setIsUser(false);
-        setIsLoaded(true);
-        return;
-      }
-
-      if(user) {
-        checkIsUser(user)
-          .then(response => {
-            response.data.data ? setIsUser(true) : setIsUser(false);
-            setIsLoaded(true);
-          })
-          .catch(err => {
-            setIsUser(false);
-            setIsLoaded(true);
-          });
-      }
-      else {
-        setIsUser(false);
-        setIsLoaded(true);
-      }
+    if(user) {
+      checkIsUser(user.email)
+        .then(response => {
+          console.log(response);
+          response.data.data ? setIsUser(true) : setIsUser(false);
+          setIsLoaded(true);
+          setUsername(user.email)
+          return getWishlist(user.email);
+        })
+        .then(response => {
+          if(response.data.length > 0)
+            setUserWishList(response.data);
+          return getBuyRecords(user.email);
+        })
+        .then(response => {
+          if(response.data.length > 0)
+            setUserBuyRecords(response.data);
+        })
+        .catch(err => {
+          setIsUser(false);
+          setIsLoaded(true);
+          console.log(err);
+        });
+    }
+    else {
+      setIsUser(false);
+      setIsLoaded(true);
+    }
   }, []);
 
   return (
@@ -69,6 +90,13 @@ function App() {
         (context) => {
           context.loginStatus = isUser;
           context.setLoginStatus = setIsUser;
+          context.user = username;
+          context.wish = userWishlist;
+          context.buyrecords = userBuyRecords;
+          context.setUsername = setUsername;
+          context.setUserWishList = setUserWishList;
+          context.setUserBuyRecords = setUserBuyRecords;
+
           return (
             !isLoaded 
             ? 
@@ -101,17 +129,21 @@ function App() {
                       </Route>
 
                       <Route exact path="/wishlist" component={Wishlist} />
+
                       <Route
                         exact
-                        path="/commonproduct/:item"
+                        path="/commonproduct/:item/:filter"
                         component={CommonProduct}
                       />
+                      <Route exact path="/commonproduct/:item" component={CommonProduct} />
+
                       <Route
                         exact
                         path="/search/:item/:filter"
                         component={ProductDisplay}
                       />
                       <Route exact path="/search/:item" component={ProductDisplay} />
+
                       <Route exact path="/admin" component={Admin} />
                       <Route exact path="/" component={Home} />
                       <Route component={NotFound} />

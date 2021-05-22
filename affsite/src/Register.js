@@ -11,7 +11,7 @@ export function Register() {
     const registerKey = 'reg-key';
     const [values, handleValues] = useLogin(registerKey, { email: '', password: '', conpassword: '' });
 
-    const handleRegister = (setLoginStatus) => {
+    const handleRegister = (setLoginStatus, setUsername) => {
         const emailInput = document.getElementById('email-input').value;
         const passwordInput = document.getElementById('password-input').value;
         const conPasswordInput = document.getElementById('conpassword-input').value;
@@ -31,11 +31,11 @@ export function Register() {
                     if(res.data.status === 200) {
                         popper("Sign up success :) Please wait..");
                         localStorage.setItem("userDetails",JSON.stringify({email: emailInput}));
+                        setUsername(emailInput);
                         setTimeout(() => setLoginStatus(true), 1500);
                     }
-                    else {
-                        popper("User already exists :(");
-                    }
+                    else 
+                        popper("User already exists :(")
                 })
                 .catch(err => {
                     console.log(err);
@@ -45,7 +45,7 @@ export function Register() {
 
     return (
         <div className="register">
-            <div className="register-panel">
+            <div className="register-panel"> 
                 <TextField type="email" fullWidth value={values.email} onChange={(e) => { handleValues(e) }} name="email" id="email-input" label="Email id" variant="outlined" />
                 <TextField type="password" fullWidth value={values.password} onChange={(e) => { handleValues(e) }} name="password" id="password-input" label="Password" variant="outlined" />
                 <TextField type="password" fullWidth value={values.conpassword} onChange={(e) => { handleValues(e) }} name="conpassword" id="conpassword-input" label="Confirm Password" variant="outlined" />
@@ -53,7 +53,7 @@ export function Register() {
                     {
                         (context) => {
                             return(
-                                <Button onClick={() => { handleRegister(context.setLoginStatus) }} id="reg-btn" variant="contained" size="medium" color="primary">
+                                <Button onClick={() => { handleRegister(context.setLoginStatus, context.setUsername) }} id="reg-btn" variant="contained" size="medium" color="primary">
                                     Register
                                 </Button>
                             );

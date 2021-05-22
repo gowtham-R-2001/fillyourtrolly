@@ -73,7 +73,7 @@ code {
 
   .div-4 {
     position: relative;
-    height: 73vh;
+    height: 75vh;
     overflow: scroll;
   }
 }
@@ -292,6 +292,17 @@ code {
   }
 }
 
+.success {
+  margin-top: 20px;
+}
+
+.error {
+  margin: auto;
+  position: relative;
+  margin-top: 20px;
+  width: 100%;
+}
+
 
 
 
@@ -301,35 +312,79 @@ code {
 .home {
   height: 100%;
 
+  & > div:not(:nth-child(1)) {
+    margin-top: 10px;
+  }
+
+  & > div:not(.footer) {
+    margin-left: 3px;
+    margin-right: 3px;
+    border-radius: 20px;
+  }
+
+  .heading {
+    font-style: bold;
+    font-weight: 600;
+    font-size: 12.5pt;
+    float: left;
+    position: relative;
+    top: 10px;
+    left: 10px;
+  }
+
   .banner {
     width: 100%;
     height: 300px;
   }
-  
+
+  .home-products-holder {
+    padding: 7px 7px 7px 20px;
+    overflow: hidden;
+    background: #FFFFFF;
+  }
+
   .home-products {
     display: inline-flex;
-    max-width: 99.5vw;
+    position: relative;
+    width: 100vw;
+    right: 15px;
     column-gap: 4px;
-    overflow: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
     margin-top: 20px;
 
+    & > div:nth-child(1) {
+      margin-left: 7px;
+    }
+
+    & > div:not(:nth-child(1)) {
+      margin-left: 4%;
+    }
+
     .home-product {
+      position: relative;
       @include flexBox(column);
-      row-gap: 5px;
-      max-width: 220px;
       text-align: left;
       padding: 10px;
       border-radius: 10px;
       background-color: #FFF;
 
-      .price {
+      *:not(:nth-child(1)) {
+        margin-top: 5px;
+      }
+
+      .product-price {
         font-weight: bold;
       }
 
       img {
-        height: 150px;
-        width: 150px;
+        height: 120px;
+        width: 120px;
         border-radius: 10px;
+      }
+
+      .product-star-rating {
+        float: left;
       }
 
       span {
@@ -337,8 +392,81 @@ code {
         width: 100%;
       }
     }
+
+    .MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary {
+      height: 30px;
+      width: 100%;
+      font-family: 'Inter', sans-serif;
+      background-color: #0077FF;
+      border: none;
+      border-radius: 4px;
+      color:#fff;
+      outline: none;
+      font-weight: 200;
+      font-size: 9pt;
+      text-transform: none;
+    }
   }
 }
+
+
+
+
+.button-login-holder {
+  top: 4px;
+  width: 100%;
+  position: relative;
+
+  .login-popup-holder {
+    position: absolute;
+    transition: .7s ease;
+    opacity: 1;
+    top: 28px;
+  }
+
+  .login-popup {
+    position: relative;
+    height: 100px;
+    width: 140px;
+    top: -130px;
+    left: -8px;
+    @include flexBox(row);
+
+    .square {
+      position: absolute;
+      height: 70px;
+      width: 120px;
+      border-radius: 20px;
+      border: 2px solid #000;
+      background: #FFF;
+      z-index: 999;
+    }
+
+    .login-popup-msg {
+      position: absolute;
+      font-size: 11pt;
+      top: 27px;
+      color: #000;
+      z-index: 1001;
+    }
+
+    .arrow {
+      position: absolute;
+      height: 30px;
+      width: 20px;
+      transform: rotateZ(-69deg);
+      background: #FFF;
+      border-bottom: 2px solid #000;
+      border-left: 2px solid #000;
+      bottom: 4px;
+      right: 50px;
+      z-index: 1000;
+    }
+  }
+}
+
+
+
 
 
 /* Product */
@@ -347,6 +475,11 @@ code {
   width: calc(50px + 60vw);
   margin: 5px auto 0 auto;
 
+  .img-holder {
+    min-height: 150px;
+    min-width: 150px;
+  }
+
   &-details {
     display: flex;
     flex-wrap: wrap;
@@ -354,6 +487,10 @@ code {
     justify-content: space-between;
     padding: 20px;
     background: #FFF;
+
+    & > div:nth-child(1) {
+      margin-right: 10px;
+    }
 
     img:nth-child(1) {
       height: 150px;
@@ -388,6 +525,7 @@ code {
         .rating-holder {
           .product-rating {
             margin-left: -5px;
+
             * {
               height: fit-content;
             }
@@ -403,6 +541,18 @@ code {
 
     .button-holder {
       @include flexBox(column);
+
+      .button-login-holder {
+        max-height: 41px;
+
+        .login-popup-holder {
+          top: 40px;
+        }
+
+        .login-popup-msg {
+          top: 29px;
+        }
+      }
     }
 
     .MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary {
@@ -538,29 +688,25 @@ code {
     height: 100%;
     overflow: auto;
   }
+}
 
-  .error {
-    @include flexBox(row);
-    flex-wrap: wrap;
-    margin-top: 50px;
-
-    .fa.fa-exclamation-triangle {
-      color: #cc0000;
-      transform: scale(1.4);
-    }
-
-    span {
-      margin-left: 5px;
-      font-size: 13pt;
-    }
-  }
+.loading-holder {
+  @include flexBox(row);
+  width: fit-content;
+  margin: 40px auto 60px auto;
 }
 
 
 /* Common product */
 
 .common-product {
-  
+  height: 100%;
+  overflow: hidden;
+
+  .products {
+    height: 100%;
+    overflow: auto;
+  }
 }
 
 
@@ -582,6 +728,9 @@ code {
 }
 
 
+.error {
+  border: 2px solid red;
+}
 
 
 .MuiFormControl-root.MuiTextField-root {
@@ -605,30 +754,31 @@ code {
 
 .img-holder {
   position: relative;
+  overflow: hidden;
+}
 
-  i {
-    position: absolute;
-    color: #0077FF;
-    border-radius: 50%;
-    animation: anim .5s ease infinite;
+.spinner {
+  position: absolute;
+  color: #0077FF; 
+  border-radius: 50%;
+  animation: anim .5s ease infinite;
+}
+
+@keyframes anim {
+  0% {
+    transform: rotate(0deg) scale(2);
   }
-
-  @keyframes anim {
-    0% {
-      transform: rotate(0deg) scale(2);
-    }
-    25% {
-      transform: rotate(45deg) scale(2);
-    }
-    50% {
-      transform: rotate(90deg) scale(2);
-    }
-    75% {
-      transform: rotate(180deg) scale(2);
-    }
-    100% {
-      transform: rotate(360deg) scale(2);
-    }
+  25% {
+    transform: rotate(45deg) scale(2);
+  }
+  50% {
+    transform: rotate(90deg) scale(2);
+  }
+  75% {
+    transform: rotate(180deg) scale(2);
+  }
+  100% {
+    transform: rotate(360deg) scale(2);
   }
 }
 
@@ -662,6 +812,40 @@ code {
 }
 
 
+.footer {
+  div:not(.icons) {
+    width: 100%;
+  }
+
+  &-top {
+    padding: 30px;
+    font-size: 13pt;
+    background: #0077FF;
+  }
+
+  .icon-holder {
+    padding-bottom: 20px;
+    background: #0077FF;
+
+    .icons {
+      @include flexBox(row);
+      justify-content: space-around;
+      flex-wrap: wrap;
+      width: 100px;
+      margin: auto;
+    }
+
+    i {
+      color: #FFF;
+    }
+  }
+
+  &-bottom {
+    padding: 13px;
+    color: #FFF;
+    background: grey;
+  }
+}
 
 
 
@@ -705,7 +889,7 @@ code {
     .div-2 {
       max-height: 40px;
     }
-  
+
     .div-4 {
       height: 77vh;
     }
@@ -766,6 +950,13 @@ code {
     }
   }
 
+  .home {
+    .heading {
+      width: 100%;
+      left: -10px;
+    }
+  }
+
   .search {
     width: 98%;
   }
@@ -793,9 +984,15 @@ code {
 
 
   .profile {
+    height: 110vh;
+
+    & > *:not(:nth-child(1)) {
+      margin-top: 0;
+    }
+
     .user, .records, .wishlist, .signout {
       height: 150px;
-      width: 100vw;
+      width: 99.7vw;
       margin: auto;
     }
   }

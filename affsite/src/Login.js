@@ -1,13 +1,12 @@
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useLogin } from "./helpers/useLogin";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Axios from "axios";
 import { isValidEmail } from "./helpers/validation";
 import { popper } from "./helpers/popper";
-import { useEffect } from "react";
-import { Wishlist } from "./Wishlist";
 import { WishlistContext } from "./WishlistContext";
+import { getWishlist, getBuyRecords } from "./Infohelpers";
 
 export function Login() {
   const loginkey = "login-key";
@@ -16,7 +15,7 @@ export function Login() {
     password: "",
   });
 
-  const handleLogin = (setLoginStatus) => {
+  const handleLogin = (setLoginStatus, setUsername, setUserWishList, setUserBuyRecords) => {
     const emailInput = document.getElementById('email-input').value;
     const passwordInput = document.getElementById('password-input').value;
     const loginBtn = document.getElementById('login-btn');
@@ -30,6 +29,22 @@ export function Login() {
           if (res.data.status === 200 && res.data.data[0]['COUNT(*)'] > 0) {
             popper("Login success :) Please wait..");
             localStorage.setItem("userDetails",JSON.stringify({email: emailInput}));
+            setUsername(emailInput);
+
+            getWishlist(emailInput)
+              .then(response => {
+                if(response.data.length > 0)
+                  setUserWishList(response.data);
+                return getBuyRecords(emailInput);
+              })
+              .then(response => {
+                if(response.data.length > 0)
+                  setUserBuyRecords(response.data);
+              })
+              .catch(err => {
+                console.log(err);
+              });
+
             setTimeout(() => setLoginStatus(true), 1500);
           }
           else
@@ -78,7 +93,7 @@ export function Login() {
                     variant="contained"
                     size="medium"
                     color="primary"
-                    onClick={() => { handleLogin(context.setLoginStatus) }}
+                    onClick={() => { handleLogin(context.setLoginStatus, context.setUsername, context.setUserWishList, context.setUserBuyRecords) }}
                   >
                     Login
                   </Button>

@@ -9,21 +9,38 @@ router.post("/:item", async (req,res) => {
   scrapData(item)
     .then(products => {
       console.log("Scraped");
+      item = replaceAll(item, " ", "_");
       createTable(item)
         .then(data => {
-          console.log("Table creation Success");
-          let count = 0;
-          products.forEach(async (product) => {
-            await insertData(product, item);
-            console.log("insertion success " + count);
-            count++;
-          })
-          res.send(data);
+          console.log("Table creation Success"); 
+          insertLoop(products, item)
+            .then(data => res.send(data))
+            .catch(err => res.send({data : err, code : "Error"}))
         })
-        .catch(err => res.send(err))
+        .catch(err => res.send({data : err, code : "Error"}))
     })
-    .catch(err => res.send(err));
+    .catch(err => res.send({data : err, code : "Error"}));
 });
+
+async function insertLoop(products, item) {
+  let count = 0;
+  return new Promise(async (resolve, reject) => {
+    for(let i = 0; i < products.length; i++)
+    {
+      try {
+        await insertData(products[i], item);
+        count++;
+      }
+      catch(err) {
+        console.log(err);
+        count--;
+      }
+
+      if(i === products.length - 1)
+        resolve({code: "Success", insertionCount: count, totalProducts: products.length});
+    }
+  });
+}
 
 
 async function scrapData(item)
@@ -132,15 +149,13 @@ async function createTable(item) {
   return Createpromise;
 }
 
-
+const replaceAll = (str, find, replace) => {
+  var escapedFind = find.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+  return str.replace(new RegExp(escapedFind, 'g'), replace);
+}
 
 
 async function insertData(product, item) {
-  let replaceAll = (str, find, replace) => {
-    var escapedFind = find.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
-    return str.replace(new RegExp(escapedFind, 'g'), replace);
-  }
-
   let insertSql = `INSERT INTO _${item} (title, imageLink, link, price, starRating, totalRating) VALUES (` +
   `"${replaceAll(product.title,"\"","") }",` +
   `"${product.imageLink}",` +

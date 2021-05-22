@@ -40,7 +40,7 @@ export function Titlebar() {
                             <i className="icon-toggle"></i>
                         </div>
                     </span>
-                </IconButton>
+                </IconButton> 
 
                 <Link to="/profile">
                     <IconButton style={{padding: "10px"}}>

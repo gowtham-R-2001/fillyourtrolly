@@ -1,25 +1,14 @@
 import { Product } from "./Product";
-import { useState, useEffect, useContext } from "react";
 import { WishlistContext } from "./WishlistContext";
-import Axios from "axios";
 
 export function Wishlist () {
-    const [products, setProducts] = useState([]);
-    let userContext = useContext(WishlistContext);
-
-    // useEffect(() => {
-    //     const url = `http://localhost:9000/wishlist/?user="${}"`;
-    //     Axios.post(url)
-    //      .then(response => {console.log(response.data);})
-    //      .catch(err => {console.log(err);});
-    // },[]);
-
     return (
         <WishlistContext.Consumer>
             {
                 (context) => {
+                    console.log("Wishlist : ", context.wish);
                     return (
-                        <div className="wishlist">
+                        <div className="wishlist"> 
                             <div className="heart-holder">
                                     <i className="fa fa-heart"></i>
                                     <i className="fa fa-heart"></i>
@@ -30,10 +19,10 @@ export function Wishlist () {
                                     return(
                                         <Product
                                             key={key}
-                                            imgLink={product.imgLink}
+                                            imageLink={product.imageLink}
                                             title={product.title}
                                             price={product.price}
-                                            rating={product.rating}
+                                            starRating={product.starRating}
                                             totalRating={product.totalRating}
                                             link={product.link}
                                             button1={"Buy"}

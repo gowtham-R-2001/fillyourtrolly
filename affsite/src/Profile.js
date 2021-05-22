@@ -14,7 +14,7 @@ export function Profile() {
                                 <div className="user">
                                     <i className = "fa fa-user" aria-hidden="true"></i>
                                     <h3>User</h3>
-                                    <div className="username"> {"gowthamcool4ever"} </div>
+                                    <div className="username"> {(context.user).substring(0,(context.user).indexOf("@"))} </div>
                                 </div>
                             </IconButton>
             
@@ -38,17 +38,16 @@ export function Profile() {
                                 </IconButton>
                             </Link>
 
-                           <Link to="/login" onClick={() => {context.setLoginStatus(false); localStorage.setItem("userDetails","")}}>
-                            <IconButton>
-                                <div className="signout">
-                                    <i className="fa fa-power-off" aria-hidden="true"></i>
-                                    <h3>Signout</h3>
-                                </div>
-                            </IconButton>
+                           <Link to="/login" onClick={() => {context.setUserWishList([]); context.setUserBuyRecords([]); context.setLoginStatus(false); localStorage.setItem("userDetails","")}}>
+                                <IconButton>
+                                    <div className="signout">
+                                        <i className="fa fa-power-off" aria-hidden="true"></i>
+                                        <h3>Signout</h3>
+                                    </div>
+                                </IconButton>
                            </Link>
                         </div>
                     </div>
-            
                 );
             }
         }

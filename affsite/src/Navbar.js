@@ -17,7 +17,7 @@ export function Navbar() {
         if(count % 2 !== 0)
         {
            navContent.style.display = "block";
-           body.appendChild(overlay);
+           body.appendChild(overlay); 
 
            setTimeout(() => {
                 navContent.style.transform = "translateX(0)";

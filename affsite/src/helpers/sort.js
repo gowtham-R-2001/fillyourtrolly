@@ -1,44 +1,133 @@
 export function sort(type, data, callback) {
-    let ln = data.length;
-    data = (type === "highprice") ? desc(data, ln) : asc(data, ln);
-    callback(data);
+    removeDup(data)
+    .then((res) => {
+        if(type === "highprice") {
+            desc(res)
+            .then(response =>  {
+                return ratingFilter(response, "desc");
+            })
+            .then((filteredResponse) => {
+                callback(filteredResponse);
+            })
+        }
+        else {
+            asc(res)
+            .then(response => {
+                return ratingFilter(response, "asc");
+            })
+            .then((filteredResponse) => {
+                callback(filteredResponse);
+            })
+        }
+    })
 }
 
 
-function desc(data, ln)
+function removeDup(data)
 {
-    for(let i = 0; i < ln; i++)
-    {
-        for(let j = 0; j < ln-i-1; j++)
-        {
-            if( (parseInt(data[j].starRating.split(" ")[0]) <= parseInt(data[j+1].starRating.split(" ")[0])) && 
-                (parseInt(data[j].price.replace(",","")) < parseInt(data[j+1].price.replace(",","")))) 
-            {
-                let temp = data[j];
-                data[j] = data[j+1];
-                data[j+1] = temp;
-            }
-        }
-    }
+    let arr = [];
+    let titlearr = [];
 
-    return data;
+    return (new Promise((resolve, reject) => {
+        for(let i = 0; i < data.length; i++)
+        {
+            if(!titlearr.includes(data[i].title)) {
+                titlearr.push(data[i].title);
+                arr.push(data[i]);
+            }
+
+            if(i === data.length-1)
+                resolve(arr);
+        }
+    }));
 }
 
-function asc(data, ln)
+
+function desc(data)
 {
-    for(let i = 0; i < ln; i++)
-    {
-        for(let j = 0; j < ln-i-1; j++)
+    return (new Promise((resolve, reject) => {
+        for(let i = 0; i < data.length; i++)
         {
-            if( (parseInt(data[j].starRating.split(" ")[0]) <= parseInt(data[j+1].starRating.split(" ")[0])) && 
-                (parseInt(data[j].price.replace(",","")) > parseInt(data[j+1].price.replace(",","")))) 
+            for(let j = 0; j < data.length-i-1; j++)
             {
-                let temp = data[j];
-                data[j] = data[j+1];
-                data[j+1] = temp;
+                if( parseInt(replaceAll(data[j].price, ",", "")) < parseInt(replaceAll(data[j+1].price, ",", "")) )
+                {
+                    let temp = data[j];
+                    data[j] = data[j+1];
+                    data[j+1] = temp;
+                }
+            }
+
+            if(i === data.length-1) {
+                resolve(data);
             }
         }
-    }
+    }));
+}
 
-    return data;
+function asc(data)
+{
+    return (new Promise((resolve, reject) => {
+        for(let i = 0; i < data.length; i++)
+        {
+            for(let j = 0; j < data.length-i-1; j++)
+            {
+                if( parseInt(replaceAll(data[j].price, ",", "")) > parseInt(replaceAll(data[j+1].price, ",", "")) )
+                {
+                    let temp = data[j];
+                    data[j] = data[j+1];
+                    data[j+1] = temp;
+                }
+            }
+
+            if(i === data.length-1)
+                resolve(data);
+        }
+    }));
+}
+
+function ratingFilter(data, filter) {
+
+    let descPromise = new Promise((resolve, reject) => {
+        for(let i = 0; i < data.length; i++)
+        {
+            for(let j = 0; j < data.length-i-1; j++)
+            {
+                if(parseFloat(data[j].starRating.split(" ")[0]) > parseFloat(data[j+1].starRating.split(" ")[0]))
+                {
+                    let temp = data[j];
+                    data[j] = data[j+1];
+                    data[j+1] = temp;
+                }
+            }
+
+            if(i === data.length-1)
+                resolve(data);
+        }
+    });
+
+    let ascPromise = new Promise((resolve, reject) => {
+        for(let i = 0; i < data.length; i++)
+        {
+            for(let j = 0; j < data.length-i-1; j++)
+            {
+                if(parseFloat(data[j].starRating.split(" ")[0]) < parseFloat(data[j+1].starRating.split(" ")[0]))
+                {
+                    let temp = data[j];
+                    data[j] = data[j+1];
+                    data[j+1] = temp;
+                }
+            }
+
+            if(i === data.length-1)
+                resolve(data);
+        }
+    });
+
+    return(filter === "desc" ? descPromise : ascPromise);
+}
+
+const replaceAll = (str, find, replace) => {
+    var escapedFind = find.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+    return str.replace(new RegExp(escapedFind, 'g'), replace);
 }

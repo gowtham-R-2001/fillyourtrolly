@@ -7,7 +7,7 @@ export function ImageLoader(props) {
     return(
         <div className="img-holder" style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
             <img className={props.className} src={props.src} onLoad={() => setShowLoader(false)} />
-            {showLoader && <i className="fa fa-spinner"></i>}
+            {showLoader && <i className="fa fa-spinner spinner"></i>}
             {/* {showLoader && <Loader style={{position: "absolute"}} type="load" height="80px" width="80px" />} */}
         </div>
     );
